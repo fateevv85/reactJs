@@ -83,5 +83,50 @@ class Developer extends Employee {
 
 // 4. *При помощи генератора написать функцию-анкету, которая запрашивает у пользователя на ввод параметры и передает их в генератор. В конце, когда генератор завершается, он должен вернуть все введенные входные параметры в виде объекта. Этот объект нужно вывести в консоли.
 
+function* generateSequence(count) {
+
+  for (let i = 0; i < count; i++) {
+    yield prompt('input parameters');
+  }
+
+}
+
+// let sequence = [...generateSequence(5)];
+
+// console.log(sequence);
 
 /*5. *Написать цикл, который создает массив промисов. Внутри каждого промиса происходит обращение к ресурсу (https://jsonplaceholder.typicode.com/users/number), где вместо number подставляется число от 1 до 10. В итоге должно получиться 10 промисов. Следует дождаться выполнения загрузки всеми промисами и далее вывести массив загруженных данных.*/
+
+function httpGet(url) {
+
+  return new Promise(function (resolve, reject) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+
+    xhr.onload = function () {
+      if (this.status === 200) {
+        resolve(this.response);
+      } else {
+        var error = new Error(this.statusText);
+        error.code = this.status;
+        reject(error);
+      }
+    };
+
+    xhr.onerror = function () {
+      reject(new Error("Network Error"));
+    };
+
+    xhr.send();
+  });
+
+}
+
+let a = [];
+
+for (let i = 1; i <= 10; i++) {
+  httpGet('https://jsonplaceholder.typicode.com/users/' + i).then(response => a.push(response));
+}
+
+console.log(a);
